@@ -25,15 +25,19 @@ public class SongController {
 		Button b = (Button)e.getSource(); //each button has a unique fxml_id
 		
 		if (b == addButton) {
-			str = "add, hi josh";	
+			str = "add, hi josh";
+			showCancelSave();
 		} else if (b == deleteButton) {
 			str = "delete, hi josh";	
 		} else if (b == editButton) {
 			str = "edit, hi josh";
+			showCancelSave();
 		} else if (b == cancelButton) {
 			str = "cancel, hi josh";
+			hideCancelSave();
 		} else if (b == saveButton) {
 			str = "save, hi josh";
+			hideCancelSave();
 		}
 		
 		songName.setText(str);
@@ -42,5 +46,16 @@ public class SongController {
 		year.setText(str);
 		
 	}
+	
+	private void showCancelSave() {
+		cancelButton.setVisible(true);
+		saveButton.setVisible(true);
+	}
+	
+	private void hideCancelSave() {
+		cancelButton.setVisible(false);
+		saveButton.setVisible(false);
+	}
+	
 	
 }
