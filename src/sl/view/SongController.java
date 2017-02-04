@@ -1,11 +1,17 @@
 package sl.view;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import sl.model.Song;
+
+import java.util.ArrayList;
 
 public class SongController {
 	@FXML Button addButton;
@@ -23,8 +29,42 @@ public class SongController {
 	@FXML Label opt2;
 
 
-	ListView<Song> listView = new ListView<Song>();
+	@FXML ListView<Song> listView = new ListView<Song>();
+	ArrayList<Song> songArrayList = new ArrayList<>();
+	private int index = 0;
+	private int in = 0;
+	public ObservableList <Song> observableList;
 
+	public void put_list_to_view(){
+
+		observableList = FXCollections.observableList(songArrayList);
+		listView.setItems(observableList);
+
+		listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Song>() {
+			@Override
+			public void changed(ObservableValue<? extends Song> observable, Song oldValue, Song newValue) {
+				show();
+				in = listView.getSelectionModel().getSelectedIndex();
+				if (in >= 0)
+					index = in;
+			}
+		});
+
+		listView.setCellFactory(param -> new ListCell<Song>(){
+			protected void updateItem(Song newSong , boolean flag){
+				super.updateItem(newSong, flag);
+
+				if(flag || newSong == null || newSong.getArtist() == null){
+					setText(null);
+				}else {
+					setText(newSong.getSongName());
+				}
+			}
+		});
+
+		if (!songArrayList.isEmpty())
+			listView.getSelectionModel().select(0);
+	}
 	
 	public void click(ActionEvent e) {
 		 
@@ -43,18 +83,37 @@ public class SongController {
 
 
 		} else if (b == deleteButton) {
-			str = "delete, hi josh";	
+			str = "delete, hi josh";
 		} else if (b == editButton) {
 			str = "edit, hi josh";
 		} else if (b == cancelButton) {
 			str = "cancel, hi josh";
 		} else if (b == saveButton) {
-			checkEmptyLable();
+			if(!checkEmptyLable()){
+				return;
+			}else{
+				addSong2ListView();
+			}
 
 		}
-		
 
-		
+
+
+	}
+
+	public void addSong2ListView(){
+		String songname = songName.getText();
+		String artistName = artist.getText();
+		String year_str = year.getText();
+		String album_str = album.getText();
+
+		Song newSong = new Song(songname , artistName);
+		songArrayList.add(newSong);
+
+		observableList = FXCollections.observableArrayList(songArrayList);
+		listView.setItems(observableList);
+
+
 	}
 
 	public void clear4field(){
@@ -80,14 +139,32 @@ public class SongController {
 		if(songname.equals("") || artistName.equals("")){
 			req1.setVisible(true);
 			req2.setVisible(true);
-		}
-
-		if(!songname.equals("") && !artistName.equals("")){
+			return false;
+		}else{
 			req1.setVisible(false);
 			req2.setVisible(false);
+
 		}
 
+
+
 		return true;
+	}
+
+	public void show() {
+		try {
+			songName.setText(listView.getSelectionModel().getSelectedItem().getSongName());
+			artist.setText(listView.getSelectionModel().getSelectedItem().getArtist());
+			album.setText(listView.getSelectionModel().getSelectedItem().getAlbum());
+			int k = listView.getSelectionModel().getSelectedItem().getYear();
+			if (k != 0) {
+				year.setText(Integer.toString(k));
+			} else {
+				year.clear();
+			}
+
+		} catch (NullPointerException s) {
+		}
 	}
 	
 }

@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import javafx.stage.Stage;
+import sl.view.SongController;
 
 public class SongLib extends Application {
 	
@@ -15,6 +16,10 @@ public class SongLib extends Application {
 		loader.setLocation(getClass().getResource("/sl/view/Song.fxml"));
 		
 		SplitPane root = (SplitPane)loader.load();
+
+		SongController songController = loader.getController();
+		songController.put_list_to_view();
+
 		
 		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
