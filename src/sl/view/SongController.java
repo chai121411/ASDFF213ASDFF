@@ -1,5 +1,7 @@
 package sl.view;
 
+import java.util.ArrayList;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -9,9 +11,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import sl.model.Song;
-
-import java.util.ArrayList;
 
 public class SongController {
 	@FXML Button addButton;
@@ -27,7 +33,11 @@ public class SongController {
 	@FXML Label req2;
 	@FXML Label opt1;
 	@FXML Label opt2;
-
+	@FXML Label labelSongName;//if user does not put first two column , then it will show up
+	@FXML Label labelArtist;
+	@FXML Label labelAlbum;
+	@FXML Label labelYear;
+	
 
 	@FXML ListView<Song> listView = new ListView<Song>();
 	ArrayList<Song> songArrayList = new ArrayList<>();
@@ -76,12 +86,10 @@ public class SongController {
 			listView.getSelectionModel().clearSelection();//no selection for any item
 			clear4field();//clear the 4 fields on the right
 			editable_4_fields(true);//set 4 fields editable
+			showCancelSave();
 
 
-
-
-
-
+			
 		} else if (b == deleteButton) {
 			str = "delete, hi josh";
 		} else if (b == editButton) {
@@ -90,15 +98,13 @@ public class SongController {
 			str = "cancel, hi josh";
 		} else if (b == saveButton) {
 			if(!checkEmptyLable()){
+				//Alert Error
 				return;
 			}else{
 				addSong2ListView();
+				hideCancelSave();
 			}
-
 		}
-
-
-
 	}
 
 	public void addSong2ListView(){
@@ -124,6 +130,17 @@ public class SongController {
 	}
 
 	public void editable_4_fields(boolean flag){
+		if (flag == false) {
+			labelSongName.setTextFill(Color.GREY);
+			labelArtist.setTextFill(Color.GREY);
+			labelAlbum.setTextFill(Color.GREY);
+			labelYear.setTextFill(Color.GREY);
+		} else {
+			labelSongName.setTextFill(Color.BLACK);
+			labelArtist.setTextFill(Color.BLACK);
+			labelAlbum.setTextFill(Color.BLACK);
+			labelYear.setTextFill(Color.BLACK);
+		}
 		songName.setEditable(flag);
 		artist.setEditable(flag);
 		album.setEditable(flag);
@@ -167,4 +184,13 @@ public class SongController {
 		}
 	}
 	
+	public void hideCancelSave() {
+		cancelButton.setVisible(false);
+		saveButton.setVisible(false);
+	}
+	
+	public void showCancelSave() {
+		cancelButton.setVisible(true);
+		saveButton.setVisible(true);
+	}
 }
