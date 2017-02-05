@@ -14,7 +14,7 @@ public class Song {
 	}
 	
 	public Song(String songName, String artist, String album) {
-		this(songName, artist, album, 0);
+		this(songName, artist, album, -1);
 	}
 	
 	public Song(String songName, String artist, int year) {
@@ -22,7 +22,7 @@ public class Song {
 	}
 	
 	public Song(String songName, String artist) {
-		this(songName, artist, null, 0);
+		this(songName, artist, null, -1);
 	}
 	
 	public boolean equals(Object o) { //If the name and artist are the same as an existing song, the add should not be allowed
