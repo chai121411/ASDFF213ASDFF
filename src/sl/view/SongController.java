@@ -1,6 +1,7 @@
 package sl.view;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 
 import javafx.beans.value.ChangeListener;
@@ -92,7 +93,27 @@ public class SongController {
 
 			
 		} else if (b == deleteButton) {
-			//Are you sure you would to delete confirmation?
+
+			try {
+				Alert alertBox = new Alert(Alert.AlertType.CONFIRMATION, "Information Dialog", ButtonType.OK,
+						ButtonType.CANCEL);
+				alertBox.setContentText("Delete this song?");
+				alertBox.showAndWait();
+
+				if (alertBox.getResult() == ButtonType.OK) {
+					int n = getSelectedIndex();
+					songArrayList.remove(n);
+					clear4field();
+					up();
+
+					listView.getSelectionModel().select(n-1);
+
+				} else {
+					alertBox.close();
+				}
+			} catch (IndexOutOfBoundsException ind) {
+			}
+
 		} else if (b == editButton) {
 			str = "edit, hi josh";
 		} else if (b == cancelButton) {
@@ -144,6 +165,7 @@ public class SongController {
 
 		observableList = FXCollections.observableArrayList(songArrayList);
 		listView.setItems(observableList);
+		up();
 		
 		disableRightPane();
 	}
@@ -240,5 +262,15 @@ public class SongController {
 			 return true;
 		}
 		return false;
+	}
+
+	public int getSelectedIndex() {
+		return listView.getSelectionModel().getSelectedIndex();
+	}
+
+	public void up() {
+		Collections.sort(songArrayList, new Song.Comp());
+		observableList = FXCollections.observableArrayList(songArrayList);
+		listView.setItems(observableList);
 	}
 }
