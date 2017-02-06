@@ -99,11 +99,21 @@ public class SongController {
 			
 		} else if (b == deleteButton) {
 			if (confirmDelete()) {
+				boolean flagendlist = false;
+
+
+
 				int n = getSelectedIndex();
+
+				if(n == songArrayList.size() - 1) flagendlist = true;
 				songArrayList.remove(n);
 				clear4field();
 				up();
-				listView.getSelectionModel().select(n-1);
+
+
+				listView.getSelectionModel().select(n);
+
+				if(flagendlist)  listView.getSelectionModel().select(n - 1);
 			}
 
 		} else if (b == editButton) {
