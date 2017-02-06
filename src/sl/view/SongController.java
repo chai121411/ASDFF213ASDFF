@@ -173,6 +173,7 @@ public class SongController {
 		observableList = FXCollections.observableArrayList(songArrayList);
 		listView.setItems(observableList);
 		up();
+		listView.getSelectionModel().select(newSong);
 		disableRightPane();
 	}
 
