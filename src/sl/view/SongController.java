@@ -152,9 +152,8 @@ public class SongController {
 			newSong = new Song(songname, artistName, album_str, k);
 		}
 		
-		
 		for (Song s: songArrayList) {
-			if(s.equals(newSong)){
+			if (s.equals(newSong)) {
 				alertInvalidSong();
 				return;
 			}

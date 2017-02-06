@@ -41,7 +41,7 @@ public class Song {
 			return false;
 		}
 		Song other = (Song)o;
-		return songName == other.songName && artist == other.artist;
+		return songName.equals(other.songName) && artist.equals(other.artist);
 	} 
 
 	public String getSongName() {
@@ -74,5 +74,9 @@ public class Song {
 
 	public void setYear(int year) {
 		this.year = year;
+	}
+	
+	public String toString() {
+		return songName + ", " + artist + ", " + album + ", " + year;
 	}
 }
