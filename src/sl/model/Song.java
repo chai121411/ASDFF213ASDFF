@@ -16,7 +16,7 @@ public class Song {
 	}
 	
 	public Song(String songName, String artist, String album) {
-		this(songName, artist, album, -1);
+		this(songName, artist, album, 0);
 	}
 	
 	public Song(String songName, String artist, int year) {
@@ -24,7 +24,7 @@ public class Song {
 	}
 	
 	public Song(String songName, String artist) {
-		this(songName, artist, null, -1);
+		this(songName, artist, null, 0);
 	}
 	
 	public static class Comp implements Comparator<Song> {

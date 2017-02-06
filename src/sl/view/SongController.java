@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
 import sl.model.Song;
 
 //Persistence
+//Up to 5 points, if you do not write your name at the top of all the files you submit.
 
 public class SongController {
 	@FXML Button addButton;
@@ -44,13 +45,18 @@ public class SongController {
 	
 
 	@FXML ListView<Song> listView = new ListView<Song>();
-	ArrayList<Song> songArrayList = new ArrayList<>();
+	private ArrayList<Song> songArrayList = new ArrayList<>();
+
 	private int index = 0;
 	private int in = 0;
 	public ObservableList <Song> observableList;
 	boolean editButtonClickedBeforeSave = false;
 	private int oldSongIndex = -1; //Used in detecting when "Add" is clicked before "Cancel"
 
+	public ArrayList<Song> getSongArrayList() {
+		return songArrayList;
+	}
+	
 	public void put_list_to_view() {
 
 		observableList = FXCollections.observableList(songArrayList);
@@ -136,7 +142,7 @@ public class SongController {
 		}
 	}
 
-	public void addSong2ListView() {
+	private void addSong2ListView() {
 		String songname = songName.getText();
 		String artistName = artist.getText();
 		String year_str = year.getText();
@@ -148,13 +154,13 @@ public class SongController {
 		try {
 			if (!year_str.equals("")) {
 				k = Integer.parseInt(year_str);
-				if (k < 0) {
-				    alertInvalidYear("You entered a negative number");
+				if (k <= 0) {
+				    alertInvalidYear("You entered an invalid year.");
 				    return;
 				}
 			}
 		} catch (NumberFormatException e) {
-			alertInvalidYear("You did not enter a year in numbers");
+			alertInvalidYear("You did not enter a year in numbers.");
 			return;
 		}
 		
@@ -192,12 +198,12 @@ public class SongController {
 		try {
 			if (!year_str.equals("")) {
 				k = Integer.parseInt(year_str);
-				if (k < 0) {
-				    alertInvalidYear("You entered a negative number");
+				if (k <= 0) {
+				    alertInvalidYear("You entered an invalid year.");
 				    return;
 				}
 			} else {
-				k = -1;
+				k = 0;
 			}
 		} catch (NumberFormatException e) {
 			alertInvalidYear("You did not enter a year in numbers");
@@ -254,13 +260,13 @@ public class SongController {
 		return true;
 	}
 
-	public void show() {
+	private void show() {
 		try {
 			songName.setText(listView.getSelectionModel().getSelectedItem().getSongName());
 			artist.setText(listView.getSelectionModel().getSelectedItem().getArtist());
 			album.setText(listView.getSelectionModel().getSelectedItem().getAlbum());
 			int k = listView.getSelectionModel().getSelectedItem().getYear();
-			if (k >= 0) {
+			if (k > 0) {
 				year.setText(Integer.toString(k));
 			} else {
 				year.clear();
@@ -271,17 +277,17 @@ public class SongController {
 		}
 	}
 	
-	public void hideCancelSave() {
+	private void hideCancelSave() {
 		cancelButton.setVisible(false);
 		saveButton.setVisible(false);
 	}
 	
-	public void showCancelSave() {
+	private void showCancelSave() {
 		cancelButton.setVisible(true);
 		saveButton.setVisible(true);
 	}
 	
-	public void disableRightPane() {
+	private void disableRightPane() {
 		editable_4_fields(false);//set 4 fields uneditable
 		hideCancelSave();
 		if (songArrayList.isEmpty()) {
@@ -299,7 +305,7 @@ public class SongController {
 		alert.showAndWait();
 	}
 	
-	public void alertInvalidYear(String content) {
+	private void alertInvalidYear(String content) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
 		alert.setHeaderText("Invalid year entered.");
@@ -315,7 +321,7 @@ public class SongController {
 		alert.showAndWait();
 	}
 	
-	public boolean confirmDelete() {
+	private boolean confirmDelete() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("?");
 		alert.setHeaderText("Delete Song");
@@ -327,11 +333,11 @@ public class SongController {
 		return false;
 	}
 
-	public int getSelectedIndex() {
+	private int getSelectedIndex() {
 		return listView.getSelectionModel().getSelectedIndex();
 	}
 
-	public void up() {
+	private void up() {
 		Collections.sort(songArrayList, new Song.Comp());
 		observableList = FXCollections.observableArrayList(songArrayList);
 		listView.setItems(observableList);
