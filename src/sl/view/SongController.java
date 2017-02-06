@@ -21,6 +21,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import sl.model.Song;
 
+//Cannot add same song(same song name and same artist)
+     //Implement a way to look inside list
+//When you a delete a song, highlight next song in the list, otherwise highlight previous
+//Make a utility method that highlights a song.
+//Once a song is added, the newly added song should be selected
+//Persistence
+
 public class SongController {
 	@FXML Button addButton;
 	@FXML Button deleteButton;
@@ -89,29 +96,14 @@ public class SongController {
 			clear4field();//clear the 4 fields on the right
 			editable_4_fields(true);//set 4 fields editable
 			showCancelSave();
-
-
 			
 		} else if (b == deleteButton) {
-
-			try {
-				Alert alertBox = new Alert(Alert.AlertType.CONFIRMATION, "Information Dialog", ButtonType.OK,
-						ButtonType.CANCEL);
-				alertBox.setContentText("Delete this song?");
-				alertBox.showAndWait();
-
-				if (alertBox.getResult() == ButtonType.OK) {
-					int n = getSelectedIndex();
-					songArrayList.remove(n);
-					clear4field();
-					up();
-
-					listView.getSelectionModel().select(n-1);
-
-				} else {
-					alertBox.close();
-				}
-			} catch (IndexOutOfBoundsException ind) {
+			if (confirmDelete()) {
+				int n = getSelectedIndex();
+				songArrayList.remove(n);
+				clear4field();
+				up();
+				listView.getSelectionModel().select(n-1);
 			}
 
 		} else if (b == editButton) {
@@ -121,7 +113,6 @@ public class SongController {
 			disableRightPane();
 		} else if (b == saveButton) {
 			if (!checkEmptyLable()) {
-				//Alert Error
 				return;
 			} else {
 				addSong2ListView();
@@ -161,23 +152,37 @@ public class SongController {
 			newSong = new Song(songname, artistName, album_str, k);
 		}
 		
+		
+		for (Song s: songArrayList) {
+			if(s.equals(newSong)){
+				alertInvalidSong();
+				return;
+			}
+		}
+		
 		songArrayList.add(newSong);
-
 		observableList = FXCollections.observableArrayList(songArrayList);
 		listView.setItems(observableList);
 		up();
-		
 		disableRightPane();
 	}
 
-	public void clear4field() {
+	private void alertInvalidSong() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Invalid Song");
+		alert.setContentText("Cannot add another song with the same song name and artist.");
+		alert.showAndWait();
+	}
+
+	private void clear4field() {
 		songName.clear();
 		artist.clear();
 		album.clear();
 		year.clear();
 	}
 
-	public void editable_4_fields(boolean flag) {
+	private void editable_4_fields(boolean flag) {
 		if (flag == false) {
 			labelSongName.setTextFill(Color.GREY);
 			labelArtist.setTextFill(Color.GREY);
@@ -195,7 +200,7 @@ public class SongController {
 		year.setEditable(flag);
 	}
 
-	public boolean checkEmptyLable() {
+	private boolean checkEmptyLable() {
 		String songname = songName.getText();
 		String artistName = artist.getText();
 		String year_str = year.getText();

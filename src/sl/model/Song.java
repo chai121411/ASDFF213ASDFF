@@ -26,8 +26,8 @@ public class Song {
 	public Song(String songName, String artist) {
 		this(songName, artist, null, -1);
 	}
+	
 	public static class Comp implements Comparator<Song> {
-
 		@Override
 		public int compare(Song o1, Song o2) {
 			String songname1 = o1.getSongName();
@@ -35,6 +35,7 @@ public class Song {
 			return songname1.compareToIgnoreCase(songname2);
 		}
 	}
+	
 	public boolean equals(Object o) { //If the name and artist are the same as an existing song, the add should not be allowed
 		if (o == null || !(o instanceof Song)) {
 			return false;
