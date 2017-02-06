@@ -21,11 +21,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import sl.model.Song;
 
-//Cannot add same song(same song name and same artist)
-     //Implement a way to look inside list
-//When you a delete a song, highlight next song in the list, otherwise highlight previous
-//Make a utility method that highlights a song.
-//Once a song is added, the newly added song should be selected
 //Persistence
 
 public class SongController {
@@ -53,6 +48,8 @@ public class SongController {
 	private int index = 0;
 	private int in = 0;
 	public ObservableList <Song> observableList;
+	boolean editButtonClickedBeforeSave = false;
+	private int oldSongIndex = -1; //Used in detecting when "Add" is clicked before "Cancel"
 
 	public void put_list_to_view() {
 
@@ -91,39 +88,48 @@ public class SongController {
 		Button b = (Button)e.getSource(); //each button has a unique fxml_id
 		
 		if (b == addButton) {
-			songName.requestFocus();;
+			songName.requestFocus();
+			oldSongIndex = listView.getSelectionModel().getSelectedIndex();
 			listView.getSelectionModel().clearSelection();//no selection for any item
 			clear4field();//clear the 4 fields on the right
 			editable_4_fields(true);//set 4 fields editable
 			showCancelSave();
-			
+			editButton.setDisable(true);
 		} else if (b == deleteButton) {
-			if (confirmDelete()) {
-				boolean flagendlist = false;
-
-
-
-				int n = getSelectedIndex();
-
-				if(n == songArrayList.size() - 1) flagendlist = true;
-				songArrayList.remove(n);
-				clear4field();
-				up();
-
-
-				listView.getSelectionModel().select(n);
-
-				if(flagendlist)  listView.getSelectionModel().select(n - 1);
+			if( (!songArrayList.isEmpty()) && listView.getSelectionModel().getSelectedIndex() >= 0) {
+				if (confirmDelete()) {
+					boolean flagendlist = false;
+					
+					int n = getSelectedIndex();
+	
+					if(n == songArrayList.size() - 1) flagendlist = true;
+					songArrayList.remove(n);
+					clear4field();
+					up();
+	
+					listView.getSelectionModel().select(n);
+					if(flagendlist) listView.getSelectionModel().select(n - 1);
+					disableRightPane();
+				}
+			} else {
+				alertNoSongSelected();
 			}
 
 		} else if (b == editButton) {
-			str = "edit, hi josh";
+			editable_4_fields(true);
+			showCancelSave();
+			editButtonClickedBeforeSave = true; 
 		} else if (b == cancelButton) {
-			listView.getSelectionModel().clearSelection();//no selection for any item
-			disableRightPane();
+			if ( (!songArrayList.isEmpty()) && oldSongIndex >= 0) {
+				listView.getSelectionModel().select(oldSongIndex);
+				oldSongIndex = -1;
+			}
+			show();
 		} else if (b == saveButton) {
-			if (!checkEmptyLable()) {
+			if (!checkEmptyLabel()) {
 				return;
+			} else if(editButtonClickedBeforeSave) {//The edit button was clicked exactly before save was clicked.
+				modifySongInList();
 			} else {
 				addSong2ListView();
 			}
@@ -143,12 +149,12 @@ public class SongController {
 			if (!year_str.equals("")) {
 				k = Integer.parseInt(year_str);
 				if (k < 0) {
-				    invalidYearAlert("You entered a negative number");
+				    alertInvalidYear("You entered a negative number");
 				    return;
 				}
 			}
 		} catch (NumberFormatException e) {
-			invalidYearAlert("You did not enter a year in numbers");
+			alertInvalidYear("You did not enter a year in numbers");
 			return;
 		}
 		
@@ -173,16 +179,38 @@ public class SongController {
 		observableList = FXCollections.observableArrayList(songArrayList);
 		listView.setItems(observableList);
 		up();
-		listView.getSelectionModel().select(newSong);
-		disableRightPane();
+		highlightAndShow(newSong);
 	}
-
-	private void alertInvalidSong() {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("Invalid Song");
-		alert.setContentText("Cannot add another song with the same song name and artist.");
-		alert.showAndWait();
+	
+	private void modifySongInList() {
+		//change song details
+		
+		String year_str = year.getText();
+		
+		int k = 0;
+		
+		try {
+			if (!year_str.equals("")) {
+				k = Integer.parseInt(year_str);
+				if (k < 0) {
+				    alertInvalidYear("You entered a negative number");
+				    return;
+				}
+			} else {
+				k = -1;
+			}
+		} catch (NumberFormatException e) {
+			alertInvalidYear("You did not enter a year in numbers");
+			return;
+		}
+		
+		listView.getSelectionModel().getSelectedItem().setSongName(songName.getText());
+		listView.getSelectionModel().getSelectedItem().setArtist(artist.getText());
+		listView.getSelectionModel().getSelectedItem().setAlbum(album.getText());
+		listView.getSelectionModel().getSelectedItem().setYear(k);
+		
+		editButtonClickedBeforeSave = false;
+		disableRightPane();
 	}
 
 	private void clear4field() {
@@ -208,13 +236,12 @@ public class SongController {
 		artist.setEditable(flag);
 		album.setEditable(flag);
 		year.setEditable(flag);
+		editButtonClickedBeforeSave = false;
 	}
 
-	private boolean checkEmptyLable() {
+	private boolean checkEmptyLabel() {
 		String songname = songName.getText();
 		String artistName = artist.getText();
-		String year_str = year.getText();
-		String album_str = album.getText();
 
 		if (songname.equals("") || artistName.equals("")) {
 			req1.setVisible(true);
@@ -238,6 +265,7 @@ public class SongController {
 			} else {
 				year.clear();
 			}
+			disableRightPane();
 
 		} catch (NullPointerException s) {
 		}
@@ -254,16 +282,36 @@ public class SongController {
 	}
 	
 	public void disableRightPane() {
-		clear4field();//clear the 4 fields on the right
 		editable_4_fields(false);//set 4 fields uneditable
 		hideCancelSave();
+		if (songArrayList.isEmpty()) {
+			editButton.setDisable(true);
+		} else {
+			editButton.setDisable(false);
+		}
 	}
 	
-	public void invalidYearAlert(String content) {
+	private void alertInvalidSong() {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
-		alert.setHeaderText("Invalid year entered");
+		alert.setHeaderText("Invalid Song");
+		alert.setContentText("Cannot add another song with the same song name and artist.");
+		alert.showAndWait();
+	}
+	
+	public void alertInvalidYear(String content) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Invalid year entered.");
 		alert.setContentText(content);
+		alert.showAndWait();
+	}
+	
+	private void alertNoSongSelected(){
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("No Selection");
+		alert.setContentText("Unable to delete. Please select a song to delete.");
 		alert.showAndWait();
 	}
 	
@@ -287,5 +335,10 @@ public class SongController {
 		Collections.sort(songArrayList, new Song.Comp());
 		observableList = FXCollections.observableArrayList(songArrayList);
 		listView.setItems(observableList);
+	}
+	
+	private void highlightAndShow(Song s) {
+		listView.getSelectionModel().select(s);
+		show();
 	}
 }
