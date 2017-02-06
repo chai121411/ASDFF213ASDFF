@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1583fb0d-4282-4287-8aa5-7d33dcb906bf" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/sl/app/SongLib.class" afterPath="$PROJECT_DIR$/bin/sl/app/SongLib.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/sl/model/Song.class" afterPath="$PROJECT_DIR$/bin/sl/model/Song.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/sl/view/SongController$1.class" afterPath="$PROJECT_DIR$/bin/sl/view/SongController$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/sl/view/SongController$2.class" afterPath="$PROJECT_DIR$/bin/sl/view/SongController$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/sl/view/SongController.class" afterPath="$PROJECT_DIR$/bin/sl/view/SongController.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sl/view/SongController.java" afterPath="$PROJECT_DIR$/src/sl/view/SongController.java" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -35,6 +29,7 @@
               <folding>
                 <element signature="e#581#582#0" expanded="true" />
                 <element signature="e#620#621#0" expanded="true" />
+                <element signature="e#1718#1719#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -43,8 +38,8 @@
       <file leaf-file-name="SongController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/sl/view/SongController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="25" column="89" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="89" />
+            <state relative-caret-position="330">
+              <caret line="104" column="0" lean-forward="true" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
               <folding>
                 <element signature="e#1620#1626#0" expanded="true" />
                 <element signature="e#2269#2540#0" expanded="true" />
@@ -668,12 +663,12 @@
       <workItem from="1486162518332" duration="2495000" />
       <workItem from="1486180400329" duration="8249000" />
       <workItem from="1486234588719" duration="5000" />
-      <workItem from="1486325317882" duration="6183000" />
+      <workItem from="1486325317882" duration="6487000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25412000" />
+    <option name="totallyTimeSpent" value="25716000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="74" y="22" width="1400" height="964" extended-state="0" />
@@ -732,6 +727,7 @@
           <folding>
             <element signature="e#581#582#0" expanded="true" />
             <element signature="e#620#621#0" expanded="true" />
+            <element signature="e#1718#1719#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -776,6 +772,7 @@
           <folding>
             <element signature="e#581#582#0" expanded="true" />
             <element signature="e#620#621#0" expanded="true" />
+            <element signature="e#1718#1719#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -834,6 +831,7 @@
           <folding>
             <element signature="e#581#582#0" expanded="true" />
             <element signature="e#620#621#0" expanded="true" />
+            <element signature="e#1718#1719#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -861,8 +859,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sl/view/SongController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="25" column="89" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="89" />
+        <state relative-caret-position="330">
+          <caret line="104" column="0" lean-forward="true" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
           <folding>
             <element signature="e#1620#1626#0" expanded="true" />
             <element signature="e#2269#2540#0" expanded="true" />
