@@ -28,14 +28,13 @@ public class SongLib extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("/sl/view/Song.fxml"));
 		
 		SplitPane root = (SplitPane)loader.load();
 
 		songController = loader.getController();
-		initializeLibrary();
+		initializeLibrary(); //Check for file, and add songs into arraylist
 		songController.put_list_to_view();
 		
 		Scene scene = new Scene(root);
@@ -43,34 +42,11 @@ public class SongLib extends Application {
 		primaryStage.setTitle("Song Library");
 		primaryStage.setResizable(false);  
 		primaryStage.show();
-		
-	}
-	
-	private void initializeLibrary() throws FileNotFoundException, IOException {
-		if (new File("songLibrary.txt").exists()) {
-			ArrayList<Song> songArrayList = songController.getSongArrayList();
-			
-			try (BufferedReader br = new BufferedReader(new FileReader("songLibrary.txt"))) {
-			    String line = null;
-			    while ((line = br.readLine()) != null) {
-			    	String optionalAlbum = null;
-			        String[] splits = line.split(DELIMITER);
-			        if (!splits[2].equals("")) {
-			        	optionalAlbum = splits[2];
-			        }
-			        songArrayList.add(new Song(splits[0], splits[1], optionalAlbum, Integer.parseInt(splits[3])));
-			    }
-			}
-		}
-		
-		
 	}
 	
 	@Override
-	public void stop() throws IOException{
-
-		ArrayList<Song> songArrayList = songController.getSongArrayList();
-		
+	public void stop() throws IOException {
+		ArrayList<Song> songArrayList = songController.getSongArrayList();		
 		File file = new File("songLibrary.txt");
 		FileWriter out = new FileWriter(file);
 		
@@ -92,20 +68,25 @@ public class SongLib extends Application {
 		out.close();
 	}
 	
-	public static void main(String[] args) {
-		launch(args);
+	private void initializeLibrary() throws FileNotFoundException, IOException {
+		if (new File("songLibrary.txt").exists()) {
+			ArrayList<Song> songArrayList = songController.getSongArrayList();
+			
+			try (BufferedReader br = new BufferedReader(new FileReader("songLibrary.txt"))) {
+			    String line = null;
+			    while ((line = br.readLine()) != null) {
+			    	String optionalAlbum = null;
+			        String[] splits = line.split(DELIMITER);
+			        if (!splits[2].equals("")) {
+			        	optionalAlbum = splits[2];
+			        }
+			        songArrayList.add(new Song(splits[0], splits[1], optionalAlbum, Integer.parseInt(splits[3])));
+			    }
+			}
+		}	
 	}
 	
-	public static FileOutputStream createFileStream (String path) {
-		File file = new File(path);
-		FileOutputStream fileStream = null;
-		try {
-			fileStream = new FileOutputStream(file); //true allows append
-		} catch (FileNotFoundException e) {
-			System.err.println("Failed to create a fileoutputstream: " + e);
-		}
-		
-		return fileStream;
-
+	public static void main(String[] args) {
+		launch(args);
 	}
 }

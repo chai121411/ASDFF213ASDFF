@@ -2,18 +2,13 @@ package sl.view;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Optional;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -25,9 +20,6 @@ import sl.model.Song;
  * Min Chai
  * Josh Su
  */
-//Persistence
-//Up to 5 points, if you do not write your name at the top of all the files you submit.
-//bug for edit, if edit the name ofthe song , the songname in the listview will not change
 
 public class SongController {
 	@FXML Button addButton;
@@ -41,8 +33,6 @@ public class SongController {
 	@FXML TextField year;
 	@FXML Label req1;//if user does not put first two column , then it will show up
 	@FXML Label req2;
-	@FXML Label opt1;
-	@FXML Label opt2;
 	@FXML Label labelSongName;//if user does not put first two column , then it will show up
 	@FXML Label labelArtist;
 	@FXML Label labelAlbum;
@@ -93,28 +83,25 @@ public class SongController {
 	}
 	
 	public void click(ActionEvent e) {
-		 
-		String str = null;
 		Button b = (Button)e.getSource(); //each button has a unique fxml_id
 		
 		if (b == addButton) {
 			songName.requestFocus();
 			oldSongIndex = listView.getSelectionModel().getSelectedIndex();
 			listView.getSelectionModel().clearSelection();//no selection for any item
-			clear4field();//clear the 4 fields on the right
-			editable_4_fields(true);//set 4 fields editable
+			clearTextFields();//clear the 4 fields on the right
+			setTextFieldsEditable(true);//set 4 fields editable
 			showCancelSave();
 			editButton.setDisable(true);
 		} else if (b == deleteButton) {
 			if( (!songArrayList.isEmpty()) && listView.getSelectionModel().getSelectedIndex() >= 0) {
-				if (confirmDelete()) {
+				if (AlertUtil.confirmDelete()) {
 					boolean flagendlist = false;
-					
 					int n = getSelectedIndex();
-	
+					
 					if(n == songArrayList.size() - 1) flagendlist = true;
 					songArrayList.remove(n);
-					clear4field();
+					clearTextFields();
 					up();
 	
 					listView.getSelectionModel().select(n);
@@ -122,11 +109,10 @@ public class SongController {
 					disableRightPane();
 				}
 			} else {
-				alertNoSongSelected();
+				AlertUtil.noSongSelected();
 			}
-
 		} else if (b == editButton) {
-			editable_4_fields(true);
+			setTextFieldsEditable(true);
 			showCancelSave();
 			editButtonClickedBeforeSave = true; 
 		} else if (b == cancelButton) {
@@ -138,7 +124,7 @@ public class SongController {
 		} else if (b == saveButton) {
 			if (!checkEmptyLabel()) {
 				return;
-			} else if(editButtonClickedBeforeSave) {//The edit button was clicked exactly before save was clicked.
+			} else if (editButtonClickedBeforeSave) {//The edit button was clicked exactly before save was clicked.
 				modifySongInList();
 			} else {
 				addSong2ListView();
@@ -152,8 +138,8 @@ public class SongController {
 		String year_str = year.getText();
 		String album_str = album.getText();
 
-		System.out.println("year " + year_str);
-		System.out.println("album "+album_str);
+		//System.out.println("year " + year_str);
+		//System.out.println("album " + album_str);
 
 		int k = 0;
 		Song newSong = null;
@@ -162,20 +148,20 @@ public class SongController {
 			if (!year_str.equals("")) {
 				k = Integer.parseInt(year_str);
 				if (k <= 0) {
-				    alertInvalidYear("You entered an invalid year.");
+				    AlertUtil.invalidYear("You entered an invalid year.");
 				    return;
 				}
 			}
 		} catch (NumberFormatException e) {
-			alertInvalidYear("You did not enter a year in numbers.");
+			AlertUtil.invalidYear("You did not enter a year in numbers.");
 			return;
 		}
 		
-		if ((year_str.equals("") && (album_str == null ||album_str.equals("")))) {
+		if ( ((year_str == null || year_str.equals("")) && (album_str == null ||album_str.equals(""))) ) {
 			newSong = new Song(songname, artistName);
-		} else if (year_str == null ||year_str.equals("")) {
+		} else if (year_str == null || year_str.equals("")) {
 			newSong = new Song(songname, artistName, album_str);
-		} else if (album_str == null ||album_str.equals("")) {
+		} else if (album_str == null || album_str.equals("")) {
 			newSong = new Song(songname, artistName, k);
 		} else {
 			newSong = new Song(songname, artistName, album_str, k);
@@ -183,7 +169,7 @@ public class SongController {
 		
 		for (Song s: songArrayList) {
 			if (s.equals(newSong)) {
-				alertInvalidSong();
+				AlertUtil.invalidSong();
 				return;
 			}
 		}
@@ -198,68 +184,17 @@ public class SongController {
 	private void modifySongInList() {
 		int element = getSelectedIndex();
 		songArrayList.remove(element);
-
 		addSong2ListView();
-
-//		//change song details
-//
-//		String year_str = year.getText();
-//
-//		int k = 0;
-//
-//		try {
-//			if (!year_str.equals("")) {
-//				k = Integer.parseInt(year_str);
-//				if (k <= 0) {
-//				    alertInvalidYear("You entered an invalid year.");
-//				    return;
-//				}
-//			} else {
-//				k = 0;
-//			}
-//		} catch (NumberFormatException e) {
-//			alertInvalidYear("You did not enter a year in numbers");
-//			return;
-//		}
-//
-//		listView.getSelectionModel().getSelectedItem().setSongName(songName.getText());
-//		listView.getSelectionModel().getSelectedItem().setArtist(artist.getText());
-//		listView.getSelectionModel().getSelectedItem().setAlbum(album.getText());
-//		listView.getSelectionModel().getSelectedItem().setYear(k);
-//
-//		String songname = songName.getText();
-//		String artistName = artist.getText();
-//		String year_str1 = year.getText();
-//		String album_str = album.getText();
-//		Song newsong = new Song(songname , artistName , album_str , Integer.parseInt(year_str1));
-//
-//
-//		int element = getSelectedIndex();
-//		songArrayList.remove(element);
-//
-//		songArrayList.add(newsong);
-//		up();
-//
-//		System.out.println(songArrayList);
-//
-//
-//
-//
-//
-//
-//
-//		editButtonClickedBeforeSave = false;
-//		disableRightPane();
 	}
 
-	private void clear4field() {
+	private void clearTextFields() {
 		songName.clear();
 		artist.clear();
 		album.clear();
 		year.clear();
 	}
 
-	private void editable_4_fields(boolean flag) {
+	private void setTextFieldsEditable(boolean flag) {
 		if (flag == false) {
 			labelSongName.setTextFill(Color.GREY);
 			labelArtist.setTextFill(Color.GREY);
@@ -321,7 +256,7 @@ public class SongController {
 	}
 	
 	private void disableRightPane() {
-		editable_4_fields(false);//set 4 fields uneditable
+		setTextFieldsEditable(false);//set 4 fields uneditable
 		hideCancelSave();
 		req1.setVisible(false);
 		req2.setVisible(false);
@@ -330,42 +265,6 @@ public class SongController {
 		} else {
 			editButton.setDisable(false);
 		}
-	}
-	
-	private void alertInvalidSong() {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("Invalid Song");
-		alert.setContentText("Cannot add another song with the same song name and artist.");
-		alert.showAndWait();
-	}
-	
-	private void alertInvalidYear(String content) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("Invalid year entered.");
-		alert.setContentText(content);
-		alert.showAndWait();
-	}
-	
-	private void alertNoSongSelected(){
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("No Selection");
-		alert.setContentText("Unable to delete. Please select a song to delete.");
-		alert.showAndWait();
-	}
-	
-	private boolean confirmDelete() {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("?");
-		alert.setHeaderText("Delete Song");
-		alert.setContentText("Are you sure you would like to delete this song from the library?"); 
-		Optional<ButtonType> result = alert.showAndWait();
-		if (result.isPresent() && result.get() == ButtonType.OK) {
-			 return true;
-		}
-		return false;
 	}
 
 	private int getSelectedIndex() {
