@@ -25,6 +25,9 @@ import sl.model.Song;
  * Min Chai
  * Josh Su
  */
+//Persistence
+//Up to 5 points, if you do not write your name at the top of all the files you submit.
+//bug for edit, if edit the name ofthe song , the songname in the listview will not change
 
 public class SongController {
 	@FXML Button addButton;
@@ -45,7 +48,6 @@ public class SongController {
 	@FXML Label labelAlbum;
 	@FXML Label labelYear;
 	
-
 	@FXML ListView<Song> listView = new ListView<Song>();
 	private ArrayList<Song> songArrayList = new ArrayList<>();
 
@@ -149,7 +151,10 @@ public class SongController {
 		String artistName = artist.getText();
 		String year_str = year.getText();
 		String album_str = album.getText();
-		
+
+		System.out.println("year " + year_str);
+		System.out.println("album "+album_str);
+
 		int k = 0;
 		Song newSong = null;
 		
@@ -166,11 +171,11 @@ public class SongController {
 			return;
 		}
 		
-		if (year_str.equals("") && album_str.equals("")) {
+		if ((year_str.equals("") && (album_str == null ||album_str.equals("")))) {
 			newSong = new Song(songname, artistName);
-		} else if (year_str.equals("")) {
+		} else if (year_str == null ||year_str.equals("")) {
 			newSong = new Song(songname, artistName, album_str);
-		} else if (album_str.equals("")) {
+		} else if (album_str == null ||album_str.equals("")) {
 			newSong = new Song(songname, artistName, k);
 		} else {
 			newSong = new Song(songname, artistName, album_str, k);
@@ -191,34 +196,60 @@ public class SongController {
 	}
 	
 	private void modifySongInList() {
-		//change song details
-		
-		String year_str = year.getText();
-		
-		int k = 0;
-		
-		try {
-			if (!year_str.equals("")) {
-				k = Integer.parseInt(year_str);
-				if (k <= 0) {
-				    alertInvalidYear("You entered an invalid year.");
-				    return;
-				}
-			} else {
-				k = 0;
-			}
-		} catch (NumberFormatException e) {
-			alertInvalidYear("You did not enter a year in numbers");
-			return;
-		}
-		
-		listView.getSelectionModel().getSelectedItem().setSongName(songName.getText());
-		listView.getSelectionModel().getSelectedItem().setArtist(artist.getText());
-		listView.getSelectionModel().getSelectedItem().setAlbum(album.getText());
-		listView.getSelectionModel().getSelectedItem().setYear(k);
-		
-		editButtonClickedBeforeSave = false;
-		disableRightPane();
+		int element = getSelectedIndex();
+		songArrayList.remove(element);
+
+		addSong2ListView();
+
+//		//change song details
+//
+//		String year_str = year.getText();
+//
+//		int k = 0;
+//
+//		try {
+//			if (!year_str.equals("")) {
+//				k = Integer.parseInt(year_str);
+//				if (k <= 0) {
+//				    alertInvalidYear("You entered an invalid year.");
+//				    return;
+//				}
+//			} else {
+//				k = 0;
+//			}
+//		} catch (NumberFormatException e) {
+//			alertInvalidYear("You did not enter a year in numbers");
+//			return;
+//		}
+//
+//		listView.getSelectionModel().getSelectedItem().setSongName(songName.getText());
+//		listView.getSelectionModel().getSelectedItem().setArtist(artist.getText());
+//		listView.getSelectionModel().getSelectedItem().setAlbum(album.getText());
+//		listView.getSelectionModel().getSelectedItem().setYear(k);
+//
+//		String songname = songName.getText();
+//		String artistName = artist.getText();
+//		String year_str1 = year.getText();
+//		String album_str = album.getText();
+//		Song newsong = new Song(songname , artistName , album_str , Integer.parseInt(year_str1));
+//
+//
+//		int element = getSelectedIndex();
+//		songArrayList.remove(element);
+//
+//		songArrayList.add(newsong);
+//		up();
+//
+//		System.out.println(songArrayList);
+//
+//
+//
+//
+//
+//
+//
+//		editButtonClickedBeforeSave = false;
+//		disableRightPane();
 	}
 
 	private void clear4field() {
@@ -292,6 +323,8 @@ public class SongController {
 	private void disableRightPane() {
 		editable_4_fields(false);//set 4 fields uneditable
 		hideCancelSave();
+		req1.setVisible(false);
+		req2.setVisible(false);
 		if (songArrayList.isEmpty()) {
 			editButton.setDisable(true);
 		} else {
