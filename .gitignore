@@ -1,2 +1,4 @@
 *.class
 songLibrary.txt
+.idea/
+bin/
