@@ -41,6 +41,30 @@ public class AlertUtil {
 		alert.showAndWait();
 	}
 	
+	public static boolean confirmEdit() {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("?");
+		alert.setHeaderText("Delete Song");
+		alert.setContentText("Are you sure you would like to edit this song from the library?"); 
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.isPresent() && result.get() == ButtonType.OK) {
+			 return true;
+		}
+		return false;
+	}
+	
+	public static boolean confirmSave() {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("?");
+		alert.setHeaderText("Save Song");
+		alert.setContentText("Are you sure you would like to save this song into the library?"); 
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.isPresent() && result.get() == ButtonType.OK) {
+			 return true;
+		}
+		return false;
+	}
+	
 	public static boolean confirmDelete() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("?");

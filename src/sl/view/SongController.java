@@ -125,8 +125,10 @@ public class SongController {
 			if (!checkEmptyLabel()) {
 				return;
 			} else if (editButtonClickedBeforeSave) {//The edit button was clicked exactly before save was clicked.
-				modifySongInList();
-			} else {
+				if (AlertUtil.confirmEdit()) { //Only ask to confirm edit after we know the edit btn was clicked
+					modifySongInList();
+				}
+			} else if (AlertUtil.confirmSave()) {
 				addSong2ListView();
 			}
 		}
@@ -137,10 +139,6 @@ public class SongController {
 		String artistName = artist.getText();
 		String year_str = year.getText();
 		String album_str = album.getText();
-
-		//System.out.println("year " + year_str);
-		//System.out.println("album " + album_str);
-
 		int k = 0;
 		Song newSong = null;
 		
