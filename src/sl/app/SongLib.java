@@ -19,6 +19,10 @@ import javafx.stage.Stage;
 import sl.model.Song;
 import sl.view.SongController;
 
+/*
+ * Min Chai
+ * Josh Su
+ */
 public class SongLib extends Application {
 	
 	SongController songController = null;

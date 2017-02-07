@@ -21,8 +21,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import sl.model.Song;
 
-//Persistence
-//Up to 5 points, if you do not write your name at the top of all the files you submit.
+/*
+ * Min Chai
+ * Josh Su
+ */
 
 public class SongController {
 	@FXML Button addButton;
