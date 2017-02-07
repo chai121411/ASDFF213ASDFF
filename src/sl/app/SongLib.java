@@ -20,6 +20,7 @@ import sl.model.Song;
 import sl.view.SongController;
 
 public class SongLib extends Application {
+
 	
 	SongController songController = null;
 	private final String DELIMITER = "###@@@";
