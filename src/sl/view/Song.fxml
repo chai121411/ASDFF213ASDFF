@@ -102,7 +102,7 @@
                   </TextField>
                </children>
             </VBox>
-            <GridPane layoutX="161.0" layoutY="275.0" prefHeight="25.0" prefWidth="147.0">
+            <GridPane layoutX="144.0" layoutY="275.0" prefHeight="44.0" prefWidth="164.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="98.0" minWidth="10.0" prefWidth="66.5" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="65.5" minWidth="10.0" prefWidth="65.5" />
@@ -111,7 +111,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#click" prefHeight="29.0" prefWidth="60.0" text="Cancel" visible="false">
+                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#click" prefHeight="29.0" prefWidth="70.0" text="Cancel" visible="false">
                      <font>
                         <Font size="13.0" />
                      </font>
