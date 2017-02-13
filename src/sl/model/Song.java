@@ -4,8 +4,9 @@ import java.util.Comparator;
 
 /*
  * Min Chai
- * Josh Su
+ * Jiaxu Su
  */
+
 public class Song {
 	private String songName;
 	private String artist;

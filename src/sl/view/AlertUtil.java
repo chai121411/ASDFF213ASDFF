@@ -8,7 +8,7 @@ import javafx.scene.control.Alert.AlertType;
 
 /*
  * Min Chai
- * Josh Su
+ * Jiaxu Su
  */
 
 /*
@@ -21,7 +21,7 @@ public class AlertUtil {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
 		alert.setHeaderText("Invalid Song");
-		alert.setContentText("Cannot add another song with the same song name and artist.");
+		alert.setContentText("This song has the same name and album as another song.");
 		alert.showAndWait();
 	}
 	
@@ -41,10 +41,18 @@ public class AlertUtil {
 		alert.showAndWait();
 	}
 	
+	public static void nothingToEdit() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Nothing in list");
+		alert.setContentText("Unable to edit. There is nothing in the list.");
+		alert.showAndWait();
+	}
+	
 	public static boolean confirmEdit() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("?");
-		alert.setHeaderText("Delete Song");
+		alert.setHeaderText("Edit Song");
 		alert.setContentText("Are you sure you would like to edit this song from the library?"); 
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.isPresent() && result.get() == ButtonType.OK) {

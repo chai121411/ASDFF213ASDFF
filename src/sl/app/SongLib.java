@@ -3,7 +3,6 @@ package sl.app;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,7 +18,7 @@ import sl.view.SongController;
 
 /*
  * Min Chai
- * Josh Su
+ * Jiaxu Su
  */
 public class SongLib extends Application {
 	

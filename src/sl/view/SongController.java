@@ -18,7 +18,7 @@ import sl.model.Song;
 
 /*
  * Min Chai
- * Josh Su
+ * Jiaxu Su
  */
 
 public class SongController {
@@ -40,13 +40,13 @@ public class SongController {
 	
 	@FXML ListView<Song> listView = new ListView<Song>();
 	private ArrayList<Song> songArrayList = new ArrayList<>();
-
-	private int index = 0;
-	private int in = 0;
+	
 	public ObservableList <Song> observableList;
 	boolean editButtonClickedBeforeSave = false;
 	private int oldSongIndex = -1; //Used in detecting when "Add" is clicked before "Cancel"
 
+	private Song oldEditSong = null;
+	
 	public ArrayList<Song> getSongArrayList() {
 		return songArrayList;
 	}
@@ -60,9 +60,7 @@ public class SongController {
 			@Override
 			public void changed(ObservableValue<? extends Song> observable, Song oldValue, Song newValue) {
 				show();
-				in = listView.getSelectionModel().getSelectedIndex();
-				if (in >= 0)
-					index = in;
+				listView.getSelectionModel().getSelectedIndex();
 			}
 		});
 
@@ -112,9 +110,14 @@ public class SongController {
 				AlertUtil.noSongSelected();
 			}
 		} else if (b == editButton) {
+			if (!songArrayList.isEmpty()) {
 			setTextFieldsEditable(true);
 			showCancelSave();
-			editButtonClickedBeforeSave = true; 
+			setOldEditSong();
+			editButtonClickedBeforeSave = true;
+			} else {
+				AlertUtil.nothingToEdit();
+			}
 		} else if (b == cancelButton) {
 			if ( (!songArrayList.isEmpty()) && oldSongIndex >= 0) {
 				listView.getSelectionModel().select(oldSongIndex);
@@ -165,6 +168,8 @@ public class SongController {
 			newSong = new Song(songname, artistName, album_str, k);
 		}
 		
+		
+		
 		for (Song s: songArrayList) {
 			if (s.equals(newSong)) {
 				AlertUtil.invalidSong();
@@ -179,10 +184,94 @@ public class SongController {
 		highlightAndShow(newSong);
 	}
 	
+	private void addEditedSong2ListView() {
+		String songname = songName.getText();
+		String artistName = artist.getText();
+		String year_str = year.getText();
+		String album_str = album.getText();
+		int k = 0;
+		Song newSong = null;
+		
+		try {
+			if (!year_str.equals("")) {
+				k = Integer.parseInt(year_str);
+				if (k <= 0) {
+					if (editButtonClickedBeforeSave) {
+						songArrayList.add(oldEditSong);
+						observableList = FXCollections.observableArrayList(songArrayList);
+						listView.setItems(observableList);
+						up();
+						highlightAndShow(oldEditSong);
+					}
+				    AlertUtil.invalidYear("You entered an invalid year.");
+				    return;
+				}
+			}
+		} catch (NumberFormatException e) {
+			if (editButtonClickedBeforeSave) {
+				songArrayList.add(oldEditSong);
+				observableList = FXCollections.observableArrayList(songArrayList);
+				listView.setItems(observableList);
+				up();
+				highlightAndShow(oldEditSong);
+			}
+			AlertUtil.invalidYear("You did not enter a year in numbers.");
+			return;
+		}
+		
+		if ( ((year_str == null || year_str.equals("")) && (album_str == null ||album_str.equals(""))) ) {
+			newSong = new Song(songname, artistName);
+		} else if (year_str == null || year_str.equals("")) {
+			newSong = new Song(songname, artistName, album_str);
+		} else if (album_str == null || album_str.equals("")) {
+			newSong = new Song(songname, artistName, k);
+		} else {
+			newSong = new Song(songname, artistName, album_str, k);
+		}
+		
+		for (Song s: songArrayList) {
+			if (s.equals(newSong)) {
+				if (editButtonClickedBeforeSave) {
+					songArrayList.add(oldEditSong);
+					observableList = FXCollections.observableArrayList(songArrayList);
+					listView.setItems(observableList);
+					up();
+					highlightAndShow(oldEditSong);
+				}
+				AlertUtil.invalidSong();
+				return;
+			}
+		}
+		
+		songArrayList.add(newSong);
+		observableList = FXCollections.observableArrayList(songArrayList);
+		listView.setItems(observableList);
+		up();
+		highlightAndShow(newSong);
+	}
+	
+	
+	private void setOldEditSong() {
+		String songname = songName.getText();
+		String artistName = artist.getText();
+		String year_str = year.getText();
+		String album_str = album.getText();
+		
+		if ( ((year_str == null || year_str.equals("")) && (album_str == null ||album_str.equals(""))) ) {
+			oldEditSong = new Song(songname, artistName);
+		} else if (year_str == null || year_str.equals("")) {
+			oldEditSong = new Song(songname, artistName, album_str);
+		} else if (album_str == null || album_str.equals("")) {
+			oldEditSong = new Song(songname, artistName, Integer.parseInt(year_str));
+		} else {
+			oldEditSong = new Song(songname, artistName, album_str, Integer.parseInt(year_str));
+		}
+	}
+	
 	private void modifySongInList() {
 		int element = getSelectedIndex();
 		songArrayList.remove(element);
-		addSong2ListView();
+		addEditedSong2ListView();//Add edited song back into list
 	}
 
 	private void clearTextFields() {
@@ -276,6 +365,7 @@ public class SongController {
 	}
 	
 	private void highlightAndShow(Song s) {
+		editButtonClickedBeforeSave = false;
 		listView.getSelectionModel().select(s);
 		show();
 	}
